@@ -1,6 +1,7 @@
 import { RouterProvider, createBrowserRouter, Navigate } from 'react-router-dom'
 import { Path } from "../common/enums/path.enum.ts";
-import {Main} from "../components/main/main.tsx";
+import { Main } from "../components/main/main.tsx";
+import { Login } from '../components/register/login.tsx';
 
 export const routerProvider: RouterProvider = createBrowserRouter([
     {
@@ -12,5 +13,9 @@ export const routerProvider: RouterProvider = createBrowserRouter([
     {
         path: Path.ANY,
         element: <Navigate to={Path.ROOT} />
+    },
+    {
+        path: Path.LOGIN,
+        element: <Login />
     }
 ])
