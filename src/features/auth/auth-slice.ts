@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 interface User {
+    username: string;
     email: string;
-    password: string;
 }
 
 interface AuthState {
@@ -35,5 +35,5 @@ export const { setCredentials, logOut } = authSlice.actions;
 
 export default authSlice.reducer;
 
-export const selectUser = (state: AuthState) => { return state.user; }
-export const selectToken = (state: AuthState) => { return state.token; }
+export const selectUser = (state: { auth: AuthState }) => state.auth.user;
+export const selectToken = (state: { auth: AuthState }) => state.auth.token;

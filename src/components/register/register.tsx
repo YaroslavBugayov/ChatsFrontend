@@ -2,6 +2,10 @@ import { FC, JSX, useEffect, useRef } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useLoginMutation, useRegisterMutation } from '../../features/auth/auth-api-slice.ts';
 import toast from 'react-hot-toast';
+import { setCredentials } from '../../features/auth/auth-slice.ts';
+import { useDispatch } from 'react-redux';
+import { Path } from '../../common/enums/path.enum.ts';
+import { useNavigate } from 'react-router-dom';
 
 type FormData = {
     email: string;
@@ -11,6 +15,8 @@ type FormData = {
 
 export const Register: FC = (): JSX.Element => {
     const emailRef = useRef<HTMLInputElement>();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const [signUp, { isLoading }] = useRegisterMutation();
 
@@ -18,7 +24,8 @@ export const Register: FC = (): JSX.Element => {
     const onSubmit: SubmitHandler<FormData> = async data => {
         try {
             const userData = await signUp(data).unwrap();
-            console.log(userData);
+            dispatch(setCredentials({ user: userData.user, token: userData.tokens.accessToken }));
+            navigate(Path.ROOT)
         } catch (error) {
             toast.error(error.message);
         }
