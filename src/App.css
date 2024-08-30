@@ -18,6 +18,8 @@ main {
   height: 100%;
 }
 
+/* Auth */
+
 form {
   display: flex;
   flex-direction: column;
@@ -33,4 +35,46 @@ form h2 {
 form input {
   margin-bottom: 0.5rem;
   padding: 0.25rem;
+}
+
+/* Main */
+
+#main-page {
+  display: flex;
+}
+
+/* Navbar */
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #1a1a1a;
+  padding: 0 1.5rem;
+  width: 100%;
+}
+
+.navbar ul button {
+  margin: 0 0.25rem;
+}
+
+.navbar #home:hover {
+  cursor: pointer;
+}
+
+/* Rooms */
+
+.rooms {
+  flex-grow: 1;
+}
+
+/* Users-list */
+
+.users-list {
+  width: 15rem;
+}
+
+.users-list ul {
+  list-style: none;
+  text-align: left;
 }

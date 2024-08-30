@@ -1,4 +1,3 @@
-import './navbar.css';
 import { FC, JSX, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Path } from '../../common/enums/path.enum.ts';
@@ -27,8 +26,8 @@ export const Navbar: FC = (): JSX.Element => {
     }
 
     return (
-        <nav>
-            <h2 onClick={() => handleNavigation(Path.ROOT)} id='home'>Chats</h2>
+        <nav className="navbar">
+            <h2 onClick={() => handleNavigation(Path.ROOT)} id="home">Chats</h2>
             <p>{greeting}</p>
             <ul>
                 {!token ? (

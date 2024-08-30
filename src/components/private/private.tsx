@@ -15,6 +15,8 @@ export const Private: FC = (): JSX.Element => {
     }, [token]);
 
     return (
-        <Outlet></Outlet>
+        <>
+            {token ? <Outlet></Outlet> : null}
+        </>
     );
 }
