@@ -28,7 +28,7 @@ export const Navbar: FC = (): JSX.Element => {
 
     return (
         <nav>
-            <h2>Chats</h2>
+            <h2 onClick={() => handleNavigation(Path.ROOT)} id='home'>Chats</h2>
             <p>{greeting}</p>
             <ul>
                 {!token ? (

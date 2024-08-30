@@ -4,7 +4,7 @@ import { selectUsers, setUsers } from '../../features/websocket/ws-slice.ts';
 import { useSubscribeToEventQuery } from '../../features/websocket/ws-api-slice.ts';
 
 export const UsersList: FC = (): JSX.Element => {
-    const { data, isLoading, error } = useSubscribeToEventQuery();
+    const {data, isLoading, error} = useSubscribeToEventQuery();
     const users = useSelector(selectUsers);
 
     useEffect(() => {
@@ -15,11 +15,11 @@ export const UsersList: FC = (): JSX.Element => {
 
     return (
         <ul>
-            {users && users.length > 0 ? (
-                users.map((user, index) => (
+            {users && users.length > 0
+                ? (users.map((user, index) => (
                     <li key={index}>{user}</li>
-                ))
-                ) : <li>No users found</li>
+                )))
+                : <li>No users found</li>
             }
         </ul>
     )
