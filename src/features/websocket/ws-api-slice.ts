@@ -1,51 +1,62 @@
-import wsSlice, { selectUsers, setUsers } from './ws-slice.ts';
+import {  setUsers } from './ws-slice.ts';
 import io from 'socket.io-client';
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import Socket = SocketIOClient.Socket;
-import { logOut } from '../auth/auth-slice.ts';
+import { SocketEvent } from '../../common/enums/socket-event.enum.ts';
 
-let socket: Socket | null = null;
+const serverUrl: string = import.meta.env.VITE_SERVER_URL;
+
+let socket: Socket;
+
+const getSocket = (): Socket => {
+    console.log(serverUrl)
+    if (!socket) {
+        socket = io(serverUrl, {
+            withCredentials: true,
+        });
+    }
+    return socket;
+}
 
 export const wsApiSlice = createApi({
     reducerPath: 'wsApi',
     baseQuery: fakeBaseQuery(),
     endpoints: builder => ({
-        connect: builder.mutation<any, any>({
-            queryFn: () => {
-                if (!socket) {
-                    socket = io('http://localhost:3000');
+        subscribeToEvent: builder.query<never, void>({
+            queryFn: () => ({ data: [] }),
+            async onCacheEntryAdded(_arg, { dispatch, cacheDataLoaded, cacheEntryRemoved, updateCacheData }) {
+                try {
+                    await cacheDataLoaded;
 
-                    socket.on('connect', () => {
+                    socket = getSocket();
+
+                    socket.on(SocketEvent.CONNECT, () => {
                         console.log('connected to socket.io');
                     });
 
-                    socket.on('disconnect', () => {
+                    socket.on(SocketEvent.USERS, (data) => {
+                        dispatch(setUsers(JSON.parse(data)));
+                    });
+
+                    socket.on(SocketEvent.DISCONNECT, () => {
                         console.log('disconnected from socket.io');
                     });
+
+                    await cacheEntryRemoved;
+
+                    socket.off(SocketEvent.CONNECT);
+                    socket.off(SocketEvent.USERS);
+                    socket.off(SocketEvent.DISCONNECT);
+                } catch (error) {
+                    console.error(error);
                 }
-
-                return { data: null };
-            }
-        }),
-
-        subscribeToEvent: builder.query<any, void>({
-            queryFn: () => ({ data: [] }),
-            async onCacheEntryAdded(_arg, { dispatch, cacheEntryRemoved, getState, getCacheEntry }) {
-                if (!socket) return;
-                console.log("huyog blyat")
-                socket.on('users', (data) => {
-                    dispatch(setUsers(JSON.parse(data)));
-                });
-
-                await cacheEntryRemoved;
-                socket?.off('users');
             }
         }),
 
         sendUsername: builder.mutation<void, { username: string }>({
             queryFn: ({ username }) => {
                 if (socket) {
-                    socket.emit('username', username);
+                    socket.emit(SocketEvent.USERNAME, username);
                 }
                 return {data: null};
             }
@@ -63,4 +74,4 @@ export const wsApiSlice = createApi({
     })
 });
 
-export const { useSubscribeToEventQuery, useSendUsernameMutation, useDisconnectMutation, useConnectMutation } = wsApiSlice;
+export const { useSubscribeToEventQuery, useSendUsernameMutation, useDisconnectMutation } = wsApiSlice;

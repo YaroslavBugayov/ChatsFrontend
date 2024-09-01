@@ -1,7 +1,4 @@
-import { FC, JSX, useEffect, useReducer, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { selectUsers, setUsers } from '../../features/websocket/ws-slice.ts';
-import { useSubscribeToEventQuery } from '../../features/websocket/ws-api-slice.ts';
+import { FC, JSX } from 'react';
 
 interface UsersListProps {
     users: string[]
