@@ -72,6 +72,7 @@ main {
   list-style: none;
   display: flex;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .rooms .room {
@@ -141,5 +142,5 @@ main {
 }
 
 .modal-form input {
-  padding: 0.2rem;
+  padding: 0.4rem;
 }

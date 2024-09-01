@@ -1,4 +1,4 @@
-import { setRooms, setUsers } from './ws-slice.ts';
+import { setError, setErrorMessage, setRooms, setUsers } from './ws-slice.ts';
 import io from 'socket.io-client';
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import Socket = SocketIOClient.Socket;
@@ -41,7 +41,11 @@ export const wsApiSlice = createApi({
 
                     socket.on(SocketEvent.ROOMS, (data) => {
                         dispatch(setRooms(JSON.parse(data)));
-                    })
+                    });
+
+                    socket.on(SocketEvent.ERROR, (data) => {
+                        dispatch(setErrorMessage(JSON.parse(data)));
+                    });
 
                     socket.on(SocketEvent.DISCONNECT, () => {
                         console.log('disconnected from socket.io');
@@ -66,8 +70,15 @@ export const wsApiSlice = createApi({
                 }
                 return {data: null};
             }
-        })
+        }),
+
+        createRoom: builder.mutation<void, void>({
+            queryFn: ({ name }: { name: string }) => {
+                socket.emit(SocketEvent.CREATE_ROOM, { name: name });
+                return {data: null};
+            }
+        }),
     })
 });
 
-export const { useSubscribeToEventQuery, useDisconnectMutation } = wsApiSlice;
+export const { useSubscribeToEventQuery, useDisconnectMutation, useCreateRoomMutation } = wsApiSlice;

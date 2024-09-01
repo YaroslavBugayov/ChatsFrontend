@@ -4,11 +4,13 @@ import { Room } from '../../models/room.model.ts';
 interface WsState {
     users: string[];
     rooms: Room[];
+    errorMessage: string;
 }
 
 const initialState: WsState = {
     users: [],
-    rooms: []
+    rooms: [],
+    errorMessage: null
 }
 
 const wsSlice = createSlice({
@@ -23,13 +25,19 @@ const wsSlice = createSlice({
         setRooms: (state, action) => {
             const { rooms } = action.payload;
             state.rooms = rooms;
+        },
+
+        setErrorMessage: (state, action) => {
+            const { errorMessage } = action.payload;
+            state.errorMessage = errorMessage;
         }
     }
 })
 
-export const { setUsers, setRooms } = wsSlice.actions;
+export const { setUsers, setRooms, setErrorMessage } = wsSlice.actions;
 
 export default wsSlice.reducer;
 
 export const selectUsers = (state: { ws: WsState }) => state.ws.users;
 export const selectRooms = (state: { ws: WsState }) => state.ws.rooms;
+export const selectErrorMessage = (state: { ws: WsState }) => state.ws.errorMessage;

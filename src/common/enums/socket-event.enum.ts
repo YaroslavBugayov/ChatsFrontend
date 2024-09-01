@@ -3,5 +3,7 @@ export const SocketEvent = {
     DISCONNECT: 'disconnect',
     USERS: 'users',
     USERNAME: 'username',
-    ROOMS: 'rooms'
+    ROOMS: 'rooms',
+    CREATE_ROOM: 'create-room',
+    ERROR: 'error'
 } as const

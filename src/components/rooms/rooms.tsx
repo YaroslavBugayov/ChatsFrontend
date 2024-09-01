@@ -1,4 +1,4 @@
-import { FC, JSX } from 'react';
+import { FC, JSX, useCallback, useState } from 'react';
 import { Room } from '../../models/room.model.ts';
 import { RoomModal } from '../room-modal/room-modal.tsx';
 
@@ -7,7 +7,11 @@ interface RoomsProps {
 }
 
 export const Rooms: FC = (props: RoomsProps): JSX.Element => {
+    const [isModalActive, setModalActive] = useState<boolean>(false);
 
+    const handleSwitchModal = useCallback((state: boolean) => {
+        setModalActive(state);
+    }, []);
 
     return (
         <>
@@ -32,9 +36,9 @@ export const Rooms: FC = (props: RoomsProps): JSX.Element => {
                             ))}
                         </ul>
                     </>}
-                <button>Create new room</button>
+                <button onClick={ () => { handleSwitchModal(true) } }>Create new room</button>
             </div>
-            <RoomModal />
+            { isModalActive ? <RoomModal handleSwitchModal={handleSwitchModal} /> : null }
         </>
     )
 }
