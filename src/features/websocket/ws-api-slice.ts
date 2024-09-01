@@ -8,11 +8,12 @@ const serverUrl: string = import.meta.env.VITE_SERVER_URL;
 
 let socket: Socket;
 
-const getSocket = (): Socket => {
+const getSocket = (username: string): Socket => {
     console.log(serverUrl)
     if (!socket) {
         socket = io(serverUrl, {
             withCredentials: true,
+            query: { username: username }
         });
     }
     return socket;
@@ -24,11 +25,11 @@ export const wsApiSlice = createApi({
     endpoints: builder => ({
         subscribeToEvent: builder.query<never, void>({
             queryFn: () => ({ data: [] }),
-            async onCacheEntryAdded(_arg, { dispatch, cacheDataLoaded, cacheEntryRemoved, updateCacheData }) {
+            async onCacheEntryAdded(username, { dispatch, cacheDataLoaded, cacheEntryRemoved, updateCacheData }) {
                 try {
                     await cacheDataLoaded;
 
-                    socket = getSocket();
+                    socket = getSocket(username);
 
                     socket.on(SocketEvent.CONNECT, () => {
                         console.log('connected to socket.io');
@@ -53,15 +54,6 @@ export const wsApiSlice = createApi({
             }
         }),
 
-        sendUsername: builder.mutation<void, { username: string }>({
-            queryFn: ({ username }) => {
-                if (socket) {
-                    socket.emit(SocketEvent.USERNAME, username);
-                }
-                return {data: null};
-            }
-        }),
-
         disconnect: builder.mutation<void, void>({
             queryFn: () => {
                 if (socket) {
@@ -74,4 +66,4 @@ export const wsApiSlice = createApi({
     })
 });
 
-export const { useSubscribeToEventQuery, useSendUsernameMutation, useDisconnectMutation } = wsApiSlice;
+export const { useSubscribeToEventQuery, useDisconnectMutation } = wsApiSlice;
