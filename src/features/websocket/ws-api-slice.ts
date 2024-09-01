@@ -1,4 +1,4 @@
-import {  setUsers } from './ws-slice.ts';
+import { setRooms, setUsers } from './ws-slice.ts';
 import io from 'socket.io-client';
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import Socket = SocketIOClient.Socket;
@@ -38,6 +38,10 @@ export const wsApiSlice = createApi({
                     socket.on(SocketEvent.USERS, (data) => {
                         dispatch(setUsers(JSON.parse(data)));
                     });
+
+                    socket.on(SocketEvent.ROOMS, (data) => {
+                        dispatch(setRooms(JSON.parse(data)));
+                    })
 
                     socket.on(SocketEvent.DISCONNECT, () => {
                         console.log('disconnected from socket.io');

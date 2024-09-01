@@ -1,11 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { Room } from '../../models/room.model.ts';
 
 interface WsState {
-    users: string[]
+    users: string[];
+    rooms: Room[];
 }
 
 const initialState: WsState = {
-    users: []
+    users: [],
+    rooms: []
 }
 
 const wsSlice = createSlice({
@@ -16,11 +19,17 @@ const wsSlice = createSlice({
             const { users } = action.payload;
             state.users = users;
         },
+
+        setRooms: (state, action) => {
+            const { rooms } = action.payload;
+            state.rooms = rooms;
+        }
     }
 })
 
-export const { setUsers } = wsSlice.actions;
+export const { setUsers, setRooms } = wsSlice.actions;
 
 export default wsSlice.reducer;
 
 export const selectUsers = (state: { ws: WsState }) => state.ws.users;
+export const selectRooms = (state: { ws: WsState }) => state.ws.rooms;

@@ -35,7 +35,7 @@ export const Login: FC = (): JSX.Element => {
     }, []);
 
     return (
-        <form onSubmit={ handleSubmit(onSubmit) }>
+        <form onSubmit={ handleSubmit(onSubmit) } className="auth-form">
             <h1>Login</h1>
             <label>Email</label>
             <input ref={ emailRef } { ...register('email') } type="text" />

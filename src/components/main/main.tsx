@@ -6,11 +6,12 @@ import {
     useSubscribeToEventQuery
 } from '../../features/websocket/ws-api-slice.ts';
 import { useSelector } from 'react-redux';
-import { selectUsers } from '../../features/websocket/ws-slice.ts';
+import { selectRooms, selectUsers } from '../../features/websocket/ws-slice.ts';
 import { selectUser } from '../../features/auth/auth-slice.ts';
 
 export const Main: FC = (): JSX.Element => {
     const users = useSelector(selectUsers);
+    const rooms = useSelector(selectRooms);
     const currentUser = useSelector(selectUser);
 
     const [disconnect] = useDisconnectMutation();
@@ -26,7 +27,7 @@ export const Main: FC = (): JSX.Element => {
 
     return (
         <div id="main-page">
-            <Rooms />
+            <Rooms rooms={rooms} />
             <UsersList users={users} />
         </div>
     )

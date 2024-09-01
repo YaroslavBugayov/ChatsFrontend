@@ -20,7 +20,7 @@ main {
 
 /* Auth */
 
-form {
+.auth-form {
   display: flex;
   flex-direction: column;
   margin: 10rem auto;
@@ -28,11 +28,11 @@ form {
   text-align: start;
 }
 
-form h2 {
+.auth-form h2 {
   margin-bottom: 0.25rem;
 }
 
-form input {
+.auth-form input {
   margin-bottom: 0.5rem;
   padding: 0.25rem;
 }
@@ -68,13 +68,78 @@ form input {
   flex-grow: 1;
 }
 
-/* Users-list */
-
-.users-list {
-  width: 15rem;
+.rooms .rooms-list {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
 }
 
+.rooms .room {
+  gap: 1rem;
+  border: #888888 solid 1px;
+  border-radius: 0.2rem;
+  padding: 1rem;
+  background-color: #4a4a4a;
+}
+
+.rooms .room ul {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  padding: 0;
+  text-align: center;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.rooms .room li {
+  box-sizing: border-box;
+  border: #888888 solid 1px;
+  border-radius: 0.2rem;
+  padding: 0.5rem;
+}
+
+/* Users-list */
+
 .users-list ul {
+  width: 15rem;
   list-style: none;
   text-align: left;
+}
+
+/* Modal */
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: #242424;
+  padding: 2.5rem;
+  border-radius: 0.2rem;
+}
+
+.modal-content .close-button {
+  padding: 0.4rem;
+  align-self: end;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.modal-form input {
+  padding: 0.2rem;
 }
