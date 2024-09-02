@@ -129,6 +129,13 @@ export const wsApiSlice = createApi({
                 }
             }
         }),
+
+        sendMessage: builder.mutation<void, void>({
+            queryFn: ({ messageText, roomId }: { messageText: string, roomId: string }) => {
+                socket.emit(SocketEvent.MESSAGE, { messageText: messageText, roomId: roomId });
+                return {data: null};
+            }
+        }),
     })
 });
 
@@ -138,5 +145,6 @@ export const {
     useDisconnectMutation,
     useCreateRoomMutation,
     useJoinRoomMutation,
-    useLeaveRoomMutation
+    useLeaveRoomMutation,
+    useSendMessageMutation
 } = wsApiSlice;
