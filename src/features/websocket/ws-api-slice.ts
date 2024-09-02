@@ -1,4 +1,4 @@
-import { setError, setErrorMessage, setRooms, setUsers } from './ws-slice.ts';
+import { setErrorMessage, setRooms, setUsers } from './ws-slice.ts';
 import io from 'socket.io-client';
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react';
 import Socket = SocketIOClient.Socket;
@@ -9,7 +9,6 @@ const serverUrl: string = import.meta.env.VITE_SERVER_URL;
 let socket: Socket;
 
 const getSocket = (username: string): Socket => {
-    console.log(serverUrl)
     if (!socket) {
         socket = io(serverUrl, {
             withCredentials: true,
@@ -23,9 +22,12 @@ export const wsApiSlice = createApi({
     reducerPath: 'wsApi',
     baseQuery: fakeBaseQuery(),
     endpoints: builder => ({
-        subscribeToEvent: builder.query<never, void>({
+        subscribeToEvent: builder.query<never, { username: string }>({
             queryFn: () => ({ data: [] }),
-            async onCacheEntryAdded(username, { dispatch, cacheDataLoaded, cacheEntryRemoved, updateCacheData }) {
+            async onCacheEntryAdded(
+                { username },
+                { dispatch, cacheDataLoaded, cacheEntryRemoved, updateCacheData }
+            ) {
                 try {
                     await cacheDataLoaded;
 
@@ -48,6 +50,7 @@ export const wsApiSlice = createApi({
                     });
 
                     socket.on(SocketEvent.DISCONNECT, () => {
+                        socket = null;
                         console.log('disconnected from socket.io');
                     });
 
@@ -55,6 +58,8 @@ export const wsApiSlice = createApi({
 
                     socket.off(SocketEvent.CONNECT);
                     socket.off(SocketEvent.USERS);
+                    socket.off(SocketEvent.ROOMS);
+                    socket.off(SocketEvent.ERROR);
                     socket.off(SocketEvent.DISCONNECT);
                 } catch (error) {
                     console.error(error);
@@ -78,7 +83,44 @@ export const wsApiSlice = createApi({
                 return {data: null};
             }
         }),
+
+        subscribeToChatEvent: builder.query<never, { username: string, id: string }>({
+            queryFn: () => ({ data: [] }),
+            async onCacheEntryAdded(
+                { username, id }: { username: string, id: string },
+                { dispatch, cacheDataLoaded, cacheEntryRemoved, updateCacheData }
+            ) {
+                try {
+                    await cacheDataLoaded;
+
+                    socket = getSocket(username);
+
+                    socket.on(SocketEvent.CONNECT, () => {
+                        console.log('connected to socket.io');
+                    });
+
+                    socket.emit(SocketEvent.JOIN_ROOM, { id: id });
+
+                    socket.on(SocketEvent.ERROR, (data) => {
+                        dispatch(setErrorMessage(JSON.parse(data)));
+                    });
+
+                    socket.on(SocketEvent.DISCONNECT, () => {
+                        socket = null;
+                        console.log('disconnected from socket.io');
+                    });
+
+                    await cacheEntryRemoved;
+
+                    socket.off(SocketEvent.CONNECT);
+                    socket.off(SocketEvent.ERROR);
+                    socket.off(SocketEvent.DISCONNECT);
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+        }),
     })
 });
 
-export const { useSubscribeToEventQuery, useDisconnectMutation, useCreateRoomMutation } = wsApiSlice;
+export const { useSubscribeToEventQuery, useDisconnectMutation, useCreateRoomMutation, useSubscribeToChatEventQuery } = wsApiSlice;

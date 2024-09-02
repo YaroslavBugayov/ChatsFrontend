@@ -30,6 +30,10 @@ export const routerProvider: RouterProvider = createBrowserRouter([
                     {
                         path: Path.ROOT,
                         element: <Main />
+                    },
+                    {
+                        path: Path.CHAT_WITH_ID,
+                        element: <Main />,
                     }
                 ]
             }

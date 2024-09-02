@@ -5,5 +5,6 @@ export const SocketEvent = {
     USERNAME: 'username',
     ROOMS: 'rooms',
     CREATE_ROOM: 'create-room',
-    ERROR: 'error'
+    ERROR: 'error',
+    JOIN_ROOM: 'join-room',
 } as const

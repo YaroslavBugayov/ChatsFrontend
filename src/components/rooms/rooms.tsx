@@ -3,7 +3,8 @@ import { Room } from '../../models/room.model.ts';
 import { RoomModal } from '../room-modal/room-modal.tsx';
 
 interface RoomsProps {
-    rooms: Room[]
+    rooms: Room[],
+    handleSwitchRoom: () => void
 }
 
 export const Rooms: FC = (props: RoomsProps): JSX.Element => {
@@ -31,7 +32,7 @@ export const Rooms: FC = (props: RoomsProps): JSX.Element => {
                                             <li key={index}>{user}</li>
                                         ))}
                                     </ul>
-                                    <button>Join</button>
+                                    <button onClick={ () => { props.handleSwitchRoom(room.id) } }>Join</button>
                                 </li>
                             ))}
                         </ul>
